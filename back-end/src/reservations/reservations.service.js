@@ -13,7 +13,14 @@ function list(){
     .select('*')
 }
 
+function listByDate(date){
+    return knex("reservations")
+    .select("*")
+    .where({reservation_date: date})
+}
+
 module.exports = {
     create,
     list,
+    listByDate,
 }
