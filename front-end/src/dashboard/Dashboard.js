@@ -23,11 +23,6 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  // const resItems = reservations.map((res,index)=> (
-  //   <ol>
-  //     <li key ={index}>{res.reservation_date}</li>
-  //   </ol>
-  // ))
 
   const content = reservations.map((res,i)=> (
     <div key={i} className = "d-flex">
