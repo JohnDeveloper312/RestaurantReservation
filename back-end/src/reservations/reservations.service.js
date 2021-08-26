@@ -17,6 +17,7 @@ function listByDate(date){
     return knex("reservations")
     .select("*")
     .where({reservation_date: date})
+    .orderBy("reservation_time");
 }
 
 module.exports = {
