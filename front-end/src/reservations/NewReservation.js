@@ -45,12 +45,16 @@ export default function NewReservation() {
     <main className="container-fluid mt-3">
       <form className="reservation-form" onSubmit={handleSubmit}>
       <h1 className="mx-2 mt-4">New Reservation</h1>
-      {reservationError &&
-        reservationError.message.map((err, i) => (
-          <ul key={i} className="alert alert-danger">
-            {err}
+      {reservationError && (
+        <div className ="alert alert-danger">
+          <h4>Please fix the folowing errors: </h4>
+          <ul>
+            {reservationError.message.map((err,i)=>(
+              <li key={i}>{err}</li>
+            ))}
           </ul>
-        ))}
+          </div>
+      )}
       <label>
         First Name:
         <input
