@@ -55,7 +55,7 @@ function resCheck(req, res, next) {
   if (reservation_time > "213000") {
     goNext = true;
     errs.push(
-      `Restaurant closes at 22:30, please choose a time on or before 21:30`
+      `Restaurant closes at 10:30, please choose a time on or before 9:30`
     );
   }
   if (goNext) return next({ status: 400, message: errs });
