@@ -47,9 +47,9 @@ export default function NewReservation() {
       <h1 className="mx-2 mt-4">New Reservation</h1>
       {reservationError &&
         reservationError.message.map((err, i) => (
-          <p key={i} className="alert alert-danger">
+          <ul key={i} className="alert alert-danger">
             {err}
-          </p>
+          </ul>
         ))}
       <label>
         First Name:
