@@ -25,15 +25,6 @@ export default function NewReservation() {
       )
       .catch(setReservationError)
       return () => abortController.abort();
-
-    // setFormData({
-    //   first_name: "",
-    //   last_name: "",
-    //   mobile_number: "",
-    //   reservation_date: "",
-    //   reservation_time: "",
-    //   people: "",
-    // });
   }
   function handleChange({ target: { name, value } }) {
     setFormData((previousReservation) => ({
@@ -47,7 +38,7 @@ export default function NewReservation() {
       <h1 className="mx-2 mt-4">New Reservation</h1>
       {reservationError && (
         <div className ="alert alert-danger">
-          <h4>Please fix the folowing errors: </h4>
+          <h5>Please fix the folowing errors: </h5>
           <ul>
             {reservationError.message.map((err,i)=>(
               <li key={i}>{err}</li>
