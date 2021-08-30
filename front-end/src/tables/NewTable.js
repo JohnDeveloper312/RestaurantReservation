@@ -5,7 +5,7 @@ import { createTable } from "../utils/api";
 export default function Table() {
   const initialState = {
     table_name: "",
-    capacity: 1,
+    capacity: "",
     occupied: false,
   };
 
@@ -36,16 +36,20 @@ export default function Table() {
         <h1 className="mx-2 mt-4">Create Table</h1>
         {tableError && (
           <div className="alert alert-danger">
-            <h5>Please fix the following errors: </h5>
+            <h4>Please fix the following errors: </h4>
+            <ul>
+              <li>{tableError.message}</li>
+            </ul>
+            {/* <h5>Please fix the following errors: </h5>
             <ul>
               {tableError.message.map((err, i) => (
                 <li key={i}>{err}</li>
               ))}
-            </ul>
+            </ul> */}
           </div>
         )}
         <div className="form-group">
-          <label htmlFor="table_name" className="m-2">
+          <label htmlFor="table_name" className="mt-2">
             Table Name:
           </label>
           <input
@@ -59,12 +63,12 @@ export default function Table() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="table_name" className="m-2">
+          <label htmlFor="table_name" className="mt-2">
             Capacity:
           </label>
           <input
             type="number"
-            placeholder= "1"
+            placeholder="minimum 1"
             name="capacity"
             id="capacity"
             min="1"
@@ -73,6 +77,12 @@ export default function Table() {
             onChange={handleChange}
           />
         </div>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+        <button className="btn btn-danger" onClick={history.goBack}>
+          Cancel
+        </button>
       </form>
     </main>
   );
