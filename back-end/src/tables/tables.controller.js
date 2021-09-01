@@ -91,11 +91,13 @@ function tableNotOccupied(req, res, next) {
   next();
 }
 function tableOccupied(req, res, next) {
-  const { reservation_id } = res.locals.table;
-  if (!reservation_id) {
+  // const { reservation_id } = res.locals.table;
+  // if (!reservation_id) {
+  if (!res.locals.table.reservation_id) {
     return next({
       status: 400,
-      message: "Table is not occupied.",
+      message: `Table is not occupied: ${res.locals.table.table_id}`,
+      // message: "Table is not occupied.",
     });
   }
   next();
@@ -114,22 +116,33 @@ async function list(req, res) {
 }
 
 async function update(req, res) {
-  const { table_id } = req.params;
-  const { reservation_id } = req.body.data;
-  const updatedTable = {
-    ...res.locals.table,
-    reservation_id: reservation_id,
-    table_id: table_id,
-    occupied: true,
-  };
-  const data = await service.update(updatedTable);
+  // const { table_id } = req.params;
+  // const { reservation_id } = req.body.data;
+  // const updatedTable = {
+  //   ...res.locals.table,
+  //   reservation_id: reservation_id,
+  //   table_id: table_id,
+  //   occupied: true,
+  // };
+  // const data = await service.update(updatedTable);
+  const data = await service.update(
+    res.locals.table.table_id,
+    res.locals.reservation.reservation_id,
+    // res.locals.table.occupied: true,
+  );
   res.json({ data });
 }
 
+// async function destroy(req, res) {
+//   await service.delete(res.locals.table.table_id);
+//   res.sendStatus(200);
+// }
 
-async function destroy(req, res) {
-  await service.delete(res.locals.table.table_id);
-  res.sendStatus(200);
+async function finish(req, res) {
+  const data = await service.finish(res.locals.table);
+  res.json({
+    data,
+  });
 }
 
 module.exports = {
@@ -151,9 +164,14 @@ module.exports = {
 
     asyncErrorBoundary(update),
   ],
-  delete: [
+  finish: [
     asyncErrorBoundary(tableExists),
     tableOccupied,
-    asyncErrorBoundary(destroy),
+    asyncErrorBoundary(finish),
   ],
+  // delete: [
+  //   asyncErrorBoundary(tableExists),
+  //   tableOccupied,
+  //   asyncErrorBoundary(destroy),
+  // ],
 };

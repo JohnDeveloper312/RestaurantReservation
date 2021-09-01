@@ -3,15 +3,15 @@ const controller = require("./tables.controller");
 const router = require("express").Router();
 
 router
-.route("/")
-.get(controller.list)
-.post(controller.create)
-.all(methodNotAllowed)
+  .route("/")
+  .get(controller.list)
+  .post(controller.create)
+  .all(methodNotAllowed);
 
 router
-.route("/:table_id/seat")
-.put(controller.update)
-.delete(controller.delete)
-.all(methodNotAllowed)
+  .route("/:table_id/seat")
+  .put(controller.update)
+  .delete(controller.finish)
+  .all(methodNotAllowed);
 
 module.exports = router;

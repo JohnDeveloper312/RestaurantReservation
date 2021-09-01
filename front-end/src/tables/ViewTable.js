@@ -31,7 +31,7 @@ export default function TablesView() {
         tables.map((table, i) => (
           <div className="row mb-2">
             <div className="col-6">
-              <h5 key={i}>{`${table.table_name}`}</h5>
+              <h5 key={table.id}>{`${table.table_name}`}</h5>
               <p>capacity: {table.capacity}</p>
             </div>
             <div data-table-id-status={table.table_id} className="col-3">

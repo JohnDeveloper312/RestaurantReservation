@@ -43,10 +43,13 @@ export default function NewReservation() {
         <div className ="alert alert-danger">
           <h5>Please fix the folowing errors: </h5>
           <ul>
+              <li>{reservationError.message}</li>
+            </ul>
+          {/* <ul>
             {reservationError.message.map((err,i)=>(
               <li key={i}>{err}</li>
             ))}
-          </ul>
+          </ul> */}
           </div>
       )}
       <label>
