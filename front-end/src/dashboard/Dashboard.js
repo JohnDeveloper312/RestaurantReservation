@@ -41,10 +41,10 @@ function Dashboard({ date }) {
 
   const content = reservations.map((res, i) => (
     <div key={i} className="d-flex">
-      <div className="col-3">
+      <div className="col-2">
         <p>{res.first_name}</p>
       </div>
-      <div className="col-3">
+      <div className="col-2">
         <p>{res.last_name}</p>
       </div>
       <div className="col-2">
@@ -58,7 +58,7 @@ function Dashboard({ date }) {
       </div>
       <div className="col-2">
         <a href={`/reservations/${res.reservation_id}/seat`}>
-          <button type="button" className="btn btn-primary">
+          <button type="button" className="btn btn-primary" col="col-2">
             Seat
           </button>
         </a>
@@ -98,10 +98,10 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       <div className="d-flex">
-        <div className="col-3">
+        <div className="col-2">
           <h5>First Name</h5>
         </div>
-        <div className="col-3">
+        <div className="col-2">
           <h5>Last Name</h5>
         </div>
         <div className="col-2">

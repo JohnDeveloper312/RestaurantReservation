@@ -9,7 +9,7 @@ exports.up = function (knex) {
         .onDelete("CASCADE");
       table.string("table_name").notNullable();
       table.integer("capacity").notNullable();
-      table.boolean("occupied").notNullable();
+      table.boolean('occupied').notNullable().defaultTo('false');
     });
   };
   

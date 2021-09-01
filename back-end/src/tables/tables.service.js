@@ -21,9 +21,16 @@ function update(table) {
     .then((updated) => updated[0]);
 }
 
+function destroy(tableId){
+    return knex("tables")
+    .where({table_id: tableId})
+    .update({occupied: false, reservation_id: null}, "*")
+}
+
 module.exports = {
   list,
   create,
   read,
   update,
+  delete: destroy,
 };

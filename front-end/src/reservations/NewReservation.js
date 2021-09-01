@@ -27,6 +27,9 @@ export default function NewReservation() {
       return () => abortController.abort();
   }
   function handleChange({ target: { name, value } }) {
+    if (name === "people") {
+      value = Number(value);
+    }
     setFormData((previousReservation) => ({
       ...previousReservation,
       [name]: value,
