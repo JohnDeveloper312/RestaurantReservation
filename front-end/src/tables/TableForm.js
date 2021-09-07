@@ -57,6 +57,7 @@ function TableForm({
                 name="capacity"
                 className="form-control"
                 aria-label="Table capacity"
+                placeholder="0"
                 required={true}
                 value={table.capacity}
                 min={1}
@@ -64,15 +65,15 @@ function TableForm({
               />
             </div>
           </div>
+          <button type="submit" className="btn btn-primary">
+            <span className="oi oi-check" /> Submit
+          </button>
           <button
             type="button"
             className="btn btn-secondary mr-2 cancel"
             onClick={onCancel}
           >
             <span className="oi oi-x" /> Cancel
-          </button>
-          <button type="submit" className="btn btn-primary">
-            <span className="oi oi-check" /> Submit
           </button>
         </fieldset>
       </form>

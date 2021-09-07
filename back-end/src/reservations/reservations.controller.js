@@ -10,11 +10,20 @@ const validProperties = [
   "reservation_date",
   "reservation_time",
   "people",
+  "status",
+];
+const requiredProperties = [
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
+  "people",
 ];
 
 function hasProperties(req, res, next) {
   const { data = {} } = req.body;
-  validProperties.forEach((property) => {
+  requiredProperties.forEach((property) => {
     if (!data[property]) {
       const error = new Error(`A '${property}' property is required.`);
       error.status = 400;
@@ -47,14 +56,26 @@ function hasValidProperties(req, res, next) {
   if (!data.reservation_date.match(dateFormat)) {
     return next({
       status: 400,
-      message: "the reservation_date field must be a valid date",
+      message: `the ${reservation_date} field must be a valid date`,
     });
   }
   if (!data.reservation_time.match(timeFormat)) {
     return next({
       status: 400,
-      message: "the reservation_time field must be a valid time",
+      message: `the ${reservation_time} field must be a valid time`,
     });
+  }
+  if(data.status === "seated"){
+    return next({
+      status: 400,
+      message:"the reservation is already seated."
+    })
+  }
+  if(data.status === "finished"){
+    return next({
+      status: 400,
+      message: "the reservation is already finished."
+    })
   }
   next();
 }
@@ -91,10 +112,30 @@ function validReservationDate(req, res, next) {
   if (dayAsNum === invalidDate) {
     next({
       status: 400,
-      message: `WE are currently closed on Tuesdays, please select a different day.`,
+      message: `We are currently closed on Tuesdays, please select a different day.`,
     });
   }
   next();
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await service.read(req.params.reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  return next({ status: 404, message: `Reservation ${req.params.reservation_id} not found` });
+}
+
+async function reservationStatus(req,res,next){
+  const reservation = res.locals.reservation
+  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked"){
+    return next({status: 400, message: "Status is unknown"})
+  }
+  if(reservation.status === "finished"){
+    return next({status: 400, message: "finished reservation cannot be updated"})
+  }
+  return next();
 }
 
 async function list(req, res) {
@@ -115,6 +156,14 @@ async function read(req,res){
   res.status(200).json({data: reservation})
 }
 
+async function update(req, res) {
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: req.body.data.status,
+  };
+  res.json({ data: await service.update(updatedReservation) });
+}
+
 module.exports = {
   create: [
     hasProperties,
@@ -125,4 +174,5 @@ module.exports = {
   ],
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
+  update: [asyncErrorBoundary(reservationExists), reservationStatus, asyncErrorBoundary(update)]
 };

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { listTable, unseatTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
-export default function TablesView() {
+export default function TablesView(props) {
   const [tablesError, setTablesError] = useState(null);
   const [tables, setTables] = useState([]);
 
@@ -16,11 +16,9 @@ export default function TablesView() {
     return () => abortController.abort();
   }
 
-    function deleteHandler(table_id) {
-      if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
-        unseatTable(table_id).then(loadTables).catch(setTablesError);
-      }
-    }
+  function deleteHandler(table_id, reservation_id) {
+    unseatTable(table_id, reservation_id).then(props.loadDashboard).then(loadTables).catch(setTablesError);
+  }
 
 
   return (
@@ -29,22 +27,30 @@ export default function TablesView() {
       <h2>Tables</h2>
       {tables &&
         tables.map((table, i) => (
-          <div className="row mb-2">
+          <div key={i} className="row mb-2">
             <div className="col-6">
-              <h5 key={table.id}>{`${table.table_name}`}</h5>
+              <h5>{`${table.table_name}`}</h5>
               <p>capacity: {table.capacity}</p>
             </div>
             <div data-table-id-status={table.table_id} className="col-3">
               <p>{table.occupied ? "Occupied" : "Free"}</p>
             </div>
             <div data-table-id-finish={table.table_id} className="col-3">
-            <button 
-            type="button"
-            className="btn btn-warning"
-            data-table-id-finish={table.table_id}
-            onClick={()=> deleteHandler(table.table_id)}>
-              Finish
-            </button>
+              {table.occupied && (
+                <button
+                  className="btn btn-warning"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Is this table ready to seat new guests? This cannot be undone."
+                      )
+                    )
+                      deleteHandler(table.table_id, table.reservation_id);
+                  }}
+                >
+                  Finish
+                </button>
+              )}
             </div>
           </div>
         ))}

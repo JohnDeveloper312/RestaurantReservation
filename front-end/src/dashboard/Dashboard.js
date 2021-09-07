@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, updateReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, next, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
@@ -39,30 +39,72 @@ function Dashboard({ date }) {
     history.push(`dashboard?date=${today(date)}`);
   };
 
+  function clickHandler(reservation, newStatus) {
+    updateReservation(reservation, newStatus)
+      .then(loadDashboard)
+      .catch(setReservationsError);
+
+  }
+
   const content = reservations.map((res, i) => (
-    <div key={i} className="d-flex">
-      <div className="col-2">
-        <p>{res.first_name}</p>
-      </div>
-      <div className="col-2">
-        <p>{res.last_name}</p>
-      </div>
-      <div className="col-2">
-        <p>{res.mobile_number}</p>
-      </div>
-      <div className="col-2">
-        <p>{res.reservation_time}</p>
-      </div>
-      <div className="col-2">
-        <p>{res.people}</p>
-      </div>
-      <div className="col-2">
-        <a href={`/reservations/${res.reservation_id}/seat`}>
-          <button type="button" className="btn btn-primary" col="col-2">
-            Seat
-          </button>
-        </a>
-      </div>
+    <div key={i}>
+      {res.status !== "finished" && (
+        <>
+          <div className="d-flex align-items-center">
+            <div className="col-2">
+              <p>{res.first_name}</p>
+            </div>
+            <div className="col-2">
+              <p>{res.last_name}</p>
+            </div>
+            <div className="col-2">
+              <p>{res.mobile_number}</p>
+            </div>
+            <div className="col-2">
+              <p>{res.reservation_time}</p>
+            </div>
+            <div className="col-2">
+              <p>{res.people}</p>
+            </div>
+            <div className="col-2">
+              {res.status === "booked" && (
+                <>
+                  <p data-reservation-id-status={res.reservation_id}>
+                    {res.status}
+                  </p>
+                  <a href={`/reservations/${res.reservation_id}/seat`}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      // onClick={() => clickHandler(res, "seated")}
+                    >
+                      Seat
+                    </button>
+                  </a>
+                </>
+              )}
+              {res.status === "seated" && (
+                <>
+                  <p data-reservation-id-status={res.reservation_id}>
+                    {res.status}
+                  </p>
+                  {/* <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => {
+                      if (window.confirm("Is this reservation finished?"))
+                        clickHandler(res, "finished");
+                    }}
+                  >
+                    Finish
+                  </button> */}
+                </>
+              )}
+            </div>
+          </div>
+          <hr />
+        </>
+      )}
     </div>
   ));
 
@@ -113,11 +155,14 @@ function Dashboard({ date }) {
         <div className="col-2">
           <h5>People</h5>
         </div>
+        <div className="col-2">
+          <h5>Status</h5>
+          </div>
       </div>
       <div>{content}</div>
       {/* {JSON.stringify(reservations)} */}
       <div className="col-4">
-        <ViewTable/>
+        <ViewTable loadDashboard={loadDashboard}/>
       </div>
     </main>
   );

@@ -42,12 +42,6 @@ export default function Seating() {
         <h1 className="mx-2 mt-4">Seat a Table</h1>
         {errorMessage && (
           <div className="alert alert-danger">
-            {/* <h4>Please fix the following errors: </h4>
-            <ul>
-              {errorMessage.message.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul> */}
             <h4>Please fix the following errors: </h4>
             <ul>
               <li>{errorMessage.message}</li>

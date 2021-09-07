@@ -10,6 +10,7 @@ export default function NewReservation() {
     reservation_date: "",
     reservation_time: "",
     people: "",
+    status: "booked",
   });
 
   let history = useHistory();
