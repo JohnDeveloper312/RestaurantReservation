@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, updateReservation } from "../utils/api";
+import { listReservations} from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, next, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
@@ -39,12 +39,12 @@ function Dashboard({ date }) {
     history.push(`dashboard?date=${today(date)}`);
   };
 
-  function clickHandler(reservation, newStatus) {
-    updateReservation(reservation, newStatus)
-      .then(loadDashboard)
-      .catch(setReservationsError);
+  // function clickHandler(reservation, newStatus) {
+  //   updateReservation(reservation, newStatus)
+  //     .then(loadDashboard)
+  //     .catch(setReservationsError);
 
-  }
+  // }
 
   const content = reservations.map((res, i) => (
     <div key={i}>
