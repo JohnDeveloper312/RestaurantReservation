@@ -65,17 +65,17 @@ function hasValidProperties(req, res, next) {
       message: `the ${reservation_time} field must be a valid time`,
     });
   }
-  if(data.status === "seated"){
+  if (data.status === "seated") {
     return next({
       status: 400,
-      message:"the reservation is already seated."
-    })
+      message: "the reservation is already seated.",
+    });
   }
-  if(data.status === "finished"){
+  if (data.status === "finished") {
     return next({
       status: 400,
-      message: "the reservation is already finished."
-    })
+      message: "the reservation is already finished.",
+    });
   }
   next();
 }
@@ -124,25 +124,54 @@ async function reservationExists(req, res, next) {
     res.locals.reservation = reservation;
     return next();
   }
-  return next({ status: 404, message: `Reservation ${req.params.reservation_id} not found` });
+  return next({
+    status: 404,
+    message: `Reservation ${req.params.reservation_id} not found`,
+  });
 }
 
-async function reservationStatus(req,res,next){
-  const reservation = res.locals.reservation
-  if(req.body.data.status !== "seated" && req.body.data.status !== "finished" && req.body.data.status !== "booked"){
-    return next({status: 400, message: "Status is unknown"})
+async function reservationStatus(req, res, next) {
+  const reservation = res.locals.reservation;
+  if (
+    req.body.data.status !== "seated" &&
+    req.body.data.status !== "finished" &&
+    req.body.data.status !== "booked"
+  ) {
+    return next({ status: 400, message: "Status is unknown" });
   }
-  if(reservation.status === "finished"){
-    return next({status: 400, message: "finished reservation cannot be updated"})
+  if (reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: "finished reservation cannot be updated",
+    });
   }
   return next();
 }
 
+function queryChecker(req, res, next) {
+  const { mobile_number } = req.query;
+  if (mobile_number) {
+    res.locals.mobile_number = mobile_number;
+    return search(req, res);
+  } else return next();
+}
+
+async function search(req, res) {
+  res.json({ data: await service.search(res.locals.mobile_number) });
+}
+
 async function list(req, res) {
-  const { date } = req.query;
-  res.json({
-    data: await service.listByDate(date),
-  });
+  const { date, mobile_number } = req.query;
+  if (date) {
+    res.json({ data: await service.listByDate(date) });
+  } else if (mobile_number) {
+    res.json({ data: await service.search(mobile_number) });
+  } else {
+    res.json({ data: await service.list() });
+  }
+  // res.json({
+  //   data: await service.listByDate(date),
+  // });
 }
 
 async function create(req, res, next) {
@@ -150,10 +179,10 @@ async function create(req, res, next) {
   res.status(201).json({ data: newReservation });
 }
 
-async function read(req,res){
-  const {reservation_Id} = req.params
-  const reservation = await service.read(reservation_Id)
-  res.status(200).json({data: reservation})
+async function read(req, res) {
+  const { reservation_Id } = req.params;
+  const reservation = await service.read(reservation_Id);
+  res.status(200).json({ data: reservation });
 }
 
 async function update(req, res) {
@@ -172,7 +201,11 @@ module.exports = {
     asyncErrorBoundary(validReservationDate),
     asyncErrorBoundary(create),
   ],
-  list: asyncErrorBoundary(list),
+  list: [asyncErrorBoundary(queryChecker), asyncErrorBoundary(list)],
   read: asyncErrorBoundary(read),
-  update: [asyncErrorBoundary(reservationExists), reservationStatus, asyncErrorBoundary(update)]
+  update: [
+    asyncErrorBoundary(reservationExists),
+    reservationStatus,
+    asyncErrorBoundary(update),
+  ],
 };

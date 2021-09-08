@@ -81,6 +81,17 @@ export async function createReservation(reservation, signal) {
   return await fetchJson(url, options);
 }
 
+export async function editReservation(reservation, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}`;
+  const options = {
+    method: `PUT`,
+    headers,
+    body: JSON.stringify({ data: reservation }),
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
 export async function updateReservation(reservation, newStatus, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}/status`;
   const options = {
@@ -132,5 +143,10 @@ export async function unseatTable(table_id, reservation_id, signal){
     signal,
   }
   return await fetchJson(url,options);
+}
+
+export async function searchReservation(mobile_number, signal) {
+  const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
+  return await fetchJson(url, signal);
 }
 

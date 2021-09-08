@@ -39,14 +39,16 @@ describe("US-07 - Search reservations - E2E", () => {
         path: ".screenshots/us-07-search-reservations-submit-valid-before.png",
         fullPage: true,
       });
-
+      console.log("42")
       await Promise.all([
         page.click("button[type=submit]"),
         page.waitForResponse((response) =>
           response.url().includes("mobile_number=")
         ),
       ]);
-
+      
+      console.log("50")
+      
       await page.screenshot({
         path: ".screenshots/us-07-search-reservations-submit-valid-after.png",
         fullPage: true,
