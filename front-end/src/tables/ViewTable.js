@@ -17,7 +17,10 @@ export default function TablesView(props) {
   }
 
   function deleteHandler(table_id, reservation_id) {
-    unseatTable(table_id, reservation_id).then(props.loadDashboard).then(loadTables).catch(setTablesError);
+    unseatTable(table_id, reservation_id)
+      .then(props.loadDashboard)
+      .then(loadTables)
+      .catch(setTablesError);
   }
 
 
@@ -25,6 +28,9 @@ export default function TablesView(props) {
     <div>
       <ErrorAlert error={tablesError} />
       <h2>Tables</h2>
+      {/* <div data-table-id-status= "5" className="col-3">
+              "occupied"
+            </div> */}
       {tables &&
         tables.map((table, i) => (
           <div key={i} className="row mb-2">
@@ -32,12 +38,15 @@ export default function TablesView(props) {
               <h5>{`${table.table_name}`}</h5>
               <p>capacity: {table.capacity}</p>
             </div>
-            <div data-table-id-status={table.table_id} className="col-3">
-              <p>{table.occupied ? "Occupied" : "Free"}</p>
+                <div data-table-id-status= {table.table_id} className="col-3">
+                {table.reservation_id ? "occupied" : "free"}
             </div>
-            <div data-table-id-finish={table.table_id} className="col-3">
-              {table.occupied && (
-                <button
+            {/* <div data-table-id-status={table.table_id} className="col-3">
+              {table.occupied ? "occupied" : "free"}
+            </div> */}
+            <div className="col-3">
+              {table.reservation_id && (
+                <button data-table-id-finish={table.table_id}
                   className="btn btn-warning"
                   onClick={() => {
                     if (
