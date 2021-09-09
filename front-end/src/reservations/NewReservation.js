@@ -10,6 +10,7 @@ export default function NewReservation() {
     reservation_date: "",
     reservation_time: "",
     people: "",
+    status: "booked",
   });
 
   let history = useHistory();
@@ -25,17 +26,11 @@ export default function NewReservation() {
       )
       .catch(setReservationError)
       return () => abortController.abort();
-
-    // setFormData({
-    //   first_name: "",
-    //   last_name: "",
-    //   mobile_number: "",
-    //   reservation_date: "",
-    //   reservation_time: "",
-    //   people: "",
-    // });
   }
   function handleChange({ target: { name, value } }) {
+    if (name === "people") {
+      value = Number(value);
+    }
     setFormData((previousReservation) => ({
       ...previousReservation,
       [name]: value,
@@ -45,12 +40,19 @@ export default function NewReservation() {
     <main className="container-fluid mt-3">
       <form className="reservation-form" onSubmit={handleSubmit}>
       <h1 className="mx-2 mt-4">New Reservation</h1>
-      {reservationError &&
-        reservationError.message.map((err, i) => (
-          <ul key={i} className="alert alert-danger">
-            {err}
-          </ul>
-        ))}
+      {reservationError && (
+        <div className ="alert alert-danger">
+          <h5>Please fix the folowing errors: </h5>
+          <ul>
+              <li>{reservationError.message}</li>
+            </ul>
+          {/* <ul>
+            {reservationError.message.map((err,i)=>(
+              <li key={i}>{err}</li>
+            ))}
+          </ul> */}
+          </div>
+      )}
       <label>
         First Name:
         <input
@@ -128,9 +130,11 @@ export default function NewReservation() {
       </label>
       <br />
       <button type="submit" className="btn btn-primary">
+      <span className="oi oi-check" />
         Submit
       </button>
       <button className="btn btn-danger" onClick={history.goBack}>
+      <span className="oi oi-x" />
         Cancel
       </button>
     </form>

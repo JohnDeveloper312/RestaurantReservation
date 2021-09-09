@@ -5,6 +5,10 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
+import NewTable from "../tables/NewTable"
+import Seating from "../reservations/ReservationSeating";
+import FindByNumber from "../Search/FindByNumber";
+import ReservationEdit from "../reservations/ReservationEdit";
 
 /**
  * Defines all the routes for the application.
@@ -24,6 +28,12 @@ function Routes() {
       <Route exact={true} path="/reservations/new">
         <NewReservation/>
         </Route>
+        <Route exact={true} path="/tables/new">
+          <NewTable/>
+          </Route>
+          <Route exact={true} path="/reservations/:reservation_id/seat">
+            <Seating />
+            </Route>
       <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
       </Route>
@@ -31,6 +41,12 @@ function Routes() {
       <Dashboard date={query.get("date") || today()} />
       {/* <Dashboard /> */}
       </Route>
+      <Route path = "/search">
+        <FindByNumber/>
+        </Route>
+        <Route path ="/reservations/:reservation_id/edit">
+          <ReservationEdit />
+          </Route>
       <Route>
         <NotFound />
       </Route>
