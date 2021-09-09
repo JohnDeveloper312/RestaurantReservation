@@ -148,11 +148,13 @@ export default function FindByNumber() {
                     </>
                   )}
                   {res.status === "finished" && <p>{res.status}</p>}
-                  <a href={`/reservations/${res.reservation_id}/edit`}>
+                  {res.status === "booked" && (
+                    <a href={`/reservations/${res.reservation_id}/edit`}>
                     <button type="button" className="btn btn-secondary ml-2">
                       Edit
                     </button>
                   </a>
+                  )}
                 </div>
               </div>
               <hr />

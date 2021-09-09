@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations} from "../utils/api";
+import { listReservations, updateReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, next, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
@@ -46,6 +46,27 @@ function Dashboard({ date }) {
 
   // }
 
+  async function handleCancel(reservation_id) {
+    console.log("a")
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? \n \n \nThis cannot be undone."
+      )
+    ) {
+      try{
+      console.log("b")
+      console.log("dashboard:",reservation_id)
+      console.log("reservation test")
+      await updateReservation({reservation_id}, "cancelled")
+      console.log("c")
+      await loadDashboard();
+      console.log("d");
+    }catch(error){
+      console.log(error);
+    }
+    }
+  }
+
   const content = reservations.map((res, i) => (
     <div key={i}>
       {res.status !== "finished" && (
@@ -75,7 +96,7 @@ function Dashboard({ date }) {
                   <a href={`/reservations/${res.reservation_id}/seat`}>
                     <button
                       type="button"
-                      className="btn btn-primary"
+                      className="btn btn-primary btn-sm"
                       // onClick={() => clickHandler(res, "seated")}
                     >
                       Seat
@@ -100,6 +121,20 @@ function Dashboard({ date }) {
                   </button> */}
                 </>
               )}
+              {res.status === "booked" && (
+                    <a href={`/reservations/${res.reservation_id}/edit`}>
+                    <button type="button" className="btn btn-secondary btn-sm ml-2">
+                      Edit
+                    </button>
+                  </a>
+                  )}
+              <button
+                data-reservation-id-cancel={res.reservation_id}
+                className="btn btn-danger btn-sm ml-2"
+                onClick={()=> handleCancel(res.reservation_id)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
           <hr />
@@ -157,12 +192,12 @@ function Dashboard({ date }) {
         </div>
         <div className="col-2">
           <h5>Status</h5>
-          </div>
+        </div>
       </div>
       <div>{content}</div>
       {/* {JSON.stringify(reservations)} */}
       <div className="col-4">
-        <ViewTable loadDashboard={loadDashboard}/>
+        <ViewTable loadDashboard={loadDashboard} />
       </div>
     </main>
   );

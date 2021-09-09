@@ -130,9 +130,11 @@ export default function NewReservation() {
       </label>
       <br />
       <button type="submit" className="btn btn-primary">
+      <span className="oi oi-check" />
         Submit
       </button>
       <button className="btn btn-danger" onClick={history.goBack}>
+      <span className="oi oi-x" />
         Cancel
       </button>
     </form>

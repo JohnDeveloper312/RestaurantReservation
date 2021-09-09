@@ -15,6 +15,7 @@ function listByDate(date) {
     .select("*")
     .where({ reservation_date: date })
     .whereNot({status: "finished"})
+    .whereNot({status: "cancelled"})
     .orderBy("reservation_time");
 }
 
@@ -25,6 +26,7 @@ function read(reservation_id) {
 }
 
 function update(reservation) {
+  console.log(reservation)
   return knex("reservations")
     .where({ reservation_id: reservation.reservation_id })
     .update(reservation, "*")

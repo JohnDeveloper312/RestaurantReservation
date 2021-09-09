@@ -75,30 +75,26 @@ describe("US-08 - Change an existing reservation - E2E", () => {
           path: ".screenshots/us-08-cancel-reservation-before.png",
           fullPage: true,
         });
-
         const cancelButtonSelector = `[data-reservation-id-cancel="${reservation.reservation_id}"]`;
-
         const cancelButton = await page.$(cancelButtonSelector);
-
         if (!cancelButton) {
           throw new Error(
             `Cancel button for reservation_id ${reservation.reservation_id} was not found.`
           );
         }
-
         page.on("dialog", async (dialog) => {
           expect(dialog.message()).toContain(
             "Do you want to cancel this reservation?"
           );
           await dialog.accept();
         });
-
+        
         await cancelButton.click();
 
+     
         await page.waitForResponse((response) => {
           return response.url().includes("/reservations?date=");
         });
-
         await page.waitForTimeout(500);
 
         expect(await page.$(cancelButtonSelector)).toBeNull();

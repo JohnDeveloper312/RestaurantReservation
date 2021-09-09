@@ -45,6 +45,7 @@ async function fetchJson(url, options, onCancel) {
     }
     return payload.data;
   } catch (error) {
+    console.log("error:",error.message);
     if (error.name !== "AbortError") {
       console.error(error.stack);
       throw error;
@@ -80,6 +81,10 @@ export async function createReservation(reservation, signal) {
   };
   return await fetchJson(url, options);
 }
+export async function readReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  return await fetchJson(url, signal).then(formatReservationDate);
+}
 
 export async function editReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}`;
@@ -100,6 +105,7 @@ export async function updateReservation(reservation, newStatus, signal) {
     body: JSON.stringify({ data: { status: newStatus } }),
     signal,
   };
+  console.log("update reservation: 106")
   return await fetchJson(url, options);
 }
 
