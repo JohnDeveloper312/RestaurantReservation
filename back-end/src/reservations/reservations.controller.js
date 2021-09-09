@@ -1,5 +1,6 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+
 /**
  * List handler for reservation resources
  */
@@ -184,9 +185,12 @@ async function create(req, res, next) {
   res.status(201).json({ data: newReservation });
 }
 
-async function read(req, res) {
+async function read(req, res, next) {
   const { reservation_id } = req.params;
   const reservation = await service.read(reservation_id);
+  if(reservation === undefined){
+    return next({status: 404, message: `${reservation_id} does not exist`})
+  }
   res.status(200).json({ data: reservation });
 }
 

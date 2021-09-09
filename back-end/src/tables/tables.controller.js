@@ -47,16 +47,17 @@ async function tableExists(req, res, next) {
 }
 
 async function reservationExists(req, res, next) {
-  const { reservation_id } = req.body.data;
-  const reservation = await readReservation(reservation_id);
-  if (reservation) {
-    res.locals.reservation = reservation;
-    return next();
-  }
-  return next({
-    status: 404,
-    message: `Reservation ID: ${reservation_id} is not found.`,
-  });
+    const { reservation_id } = req.body.data;
+    console.log(reservation_id)
+    const reservation = await readReservation(reservation_id);
+    if (reservation) {
+      res.locals.reservation = reservation;
+      return next();
+    }
+    return next({
+      status: 404,
+      message: `Reservation ID: ${reservation_id} is not found.`,
+    });
 }
 
 function tableNotOccupied(req, res, next) {
@@ -73,7 +74,7 @@ function tableOccupied(req, res, next) {
   if (!res.locals.table.reservation_id) {
     return next({
       status: 400,
-      message: `Table is not occupied: ${res.locals.table.table_id}`,
+      message: "Table is not occupied",
     });
   }
   next();
@@ -166,7 +167,7 @@ async function create(req, res) {
 
 async function destroy(req, res) {
   const reservationSeat = {
-    ...res.locals.reservation,
+    reservation_id: res.locals.table.reservation_id,
     status: "finished",
   };
   await reservationService.updateStatus(reservationSeat);
@@ -195,7 +196,6 @@ module.exports = {
   ],
   delete: [
     asyncErrorBoundary(tableExists),
-    asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(tableOccupied),
     asyncErrorBoundary(destroy),
   ],
