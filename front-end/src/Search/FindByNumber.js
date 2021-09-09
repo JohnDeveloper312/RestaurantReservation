@@ -10,11 +10,8 @@ export default function FindByNumber() {
   function loadSearch() {
     const abortController = new AbortController();
     setErrorMessage(null);
-    console.log("about to search")
     searchReservation(mobile_number, abortController.signal)
       .then((response) => {
-          console.log("search successful")
-          console.log(response)
         if (response.length > 0) {
           setFound(response);
           setNotFound(false);
@@ -33,7 +30,6 @@ export default function FindByNumber() {
 
   function submitHandler(event) {
     event.preventDefault();
-    console.log("button clicked")
     loadSearch();
   }
 

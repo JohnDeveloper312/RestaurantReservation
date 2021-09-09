@@ -123,7 +123,6 @@ function validReservationDate(req, res, next) {
 
 async function reservationExists(req, res, next) {
   const reservationID = req.body.data.reservation_id || req.params.reservation_id;
-  console.log("reservation:", reservationID)
   const reservation = await service.read(reservationID);
   if (reservation) {
     res.locals.reservation = reservation;

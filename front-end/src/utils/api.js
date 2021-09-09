@@ -45,7 +45,6 @@ async function fetchJson(url, options, onCancel) {
     }
     return payload.data;
   } catch (error) {
-    console.log("error:",error.message);
     if (error.name !== "AbortError") {
       console.error(error.stack);
       throw error;
@@ -105,7 +104,6 @@ export async function updateReservation(reservation, newStatus, signal) {
     body: JSON.stringify({ data: { status: newStatus } }),
     signal,
   };
-  console.log("update reservation: 106")
   return await fetchJson(url, options);
 }
 

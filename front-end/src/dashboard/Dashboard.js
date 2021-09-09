@@ -47,20 +47,15 @@ function Dashboard({ date }) {
   // }
 
   async function handleCancel(reservation_id) {
-    console.log("a")
+    
     if (
       window.confirm(
         "Do you want to cancel this reservation? \n \n \nThis cannot be undone."
       )
     ) {
       try{
-      console.log("b")
-      console.log("dashboard:",reservation_id)
-      console.log("reservation test")
       await updateReservation({reservation_id}, "cancelled")
-      console.log("c")
       await loadDashboard();
-      console.log("d");
     }catch(error){
       console.log(error);
     }
